@@ -1,14 +1,21 @@
-import { NextFunction, Request, RequestHandler, Response } from "express";
+import { Response, NextFunction, RequestHandler } from "express";
+import { AuthenticatedRequest } from "../middlewares/isAuth.js"; // ✅ Use your custom type
 
-const TryCatch = (handler: RequestHandler): RequestHandler => {
-  return async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      await handler(req, res, next);
-    } catch (error: any) {
-      res.status(500).json({
-        message: error.message,
-      });
-    }
+const TryCatch = (
+  handler: (
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction
+  ) => Promise<any>
+): RequestHandler => {
+  return (req, res, next) => {
+    Promise.resolve(handler(req as AuthenticatedRequest, res, next)).catch(
+      (error) => {
+        res.status(500).json({
+          message: error?.message || "Internal Server Error",
+        });
+      }
+    );
   };
 };
 
