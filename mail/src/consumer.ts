@@ -11,7 +11,6 @@ export const startSendOtpConsumer = async () => {
       port: 5672,
       username: process.env.Rabbitmq_Username,
       password: process.env.Rabbitmq_Password,
-      vhost: process.env.Rabbitmq_VHost || "/",
     });
 
     const channel = await connection.createChannel();
@@ -30,7 +29,6 @@ export const startSendOtpConsumer = async () => {
           const transporter = nodemailer.createTransport({
             host: "smtp.gmail.com",
             port: 465,
-            secure: true, 
             auth: {
               user: process.env.USER,
               pass: process.env.PASSWORD,
