@@ -36,7 +36,7 @@ export const startSendOtpConsumer = async () => {
           });
 
           await transporter.sendMail({
-            from: process.env.USER,
+            from: "Chat app",
             to,
             subject,
             text: body,
